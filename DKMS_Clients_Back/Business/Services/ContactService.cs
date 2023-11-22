@@ -35,5 +35,21 @@ namespace DKMS_Clients_Back.Business.Services
 
         }
 
+        public async Task<int?> UpdateAsync(Guid contactId, UpdateContactRequestDto updateContactRequestDto)
+        {
+            var allContacts = await _contactRepository.GetAllAsync();
+            var existingContact = allContacts.FirstOrDefault(x => x.Id == contactId);
+            if (existingContact is null)
+                return null;
+
+            existingContact.PhoneNumber = updateContactRequestDto.PhoneNumber;
+            existingContact.PhoneNumber2 = updateContactRequestDto.PhoneNumber2;
+            existingContact.Email= updateContactRequestDto.Email;
+            existingContact.Email2 = updateContactRequestDto.Email2;
+            existingContact.ExtraDetails = updateContactRequestDto.ExtraDetails;
+
+            var result = await _contactRepository.UpdateAsync(existingContact);
+            return result;
+        }
     }
 }

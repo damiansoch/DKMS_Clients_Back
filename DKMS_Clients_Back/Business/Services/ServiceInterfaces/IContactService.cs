@@ -8,4 +8,5 @@ public interface IContactService
     Task<IEnumerable<Contact>> GetAllAsync();
     Task<int> AddAsync(Contact contact);
     Task<bool> DoesEmailExist(AddCustomerRequestDto addCustomerRequestDto);
+    Task<int?> UpdateAsync(Guid contactId, UpdateContactRequestDto updateContactRequestDto);
 }

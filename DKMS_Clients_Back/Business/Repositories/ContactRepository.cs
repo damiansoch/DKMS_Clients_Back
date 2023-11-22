@@ -60,5 +60,38 @@ namespace DKMS_Clients_Back.Business.Repositories
                 throw;
             }
         }
+
+        public async Task<int> UpdateAsync(Contact contact)
+        {
+            const string query = @"
+                                   UPDATE [dbo].[Contacts]
+                                       SET [PhoneNumber] = @PhoneNumber
+                                          ,[PhoneNumber2] = @PhoneNumber2
+                                          ,[Email] = @Email
+                                          ,[Email2] = @Email2
+                                          ,[ExtraDetails] = @ExtraDetails
+                                     WHERE Id = @Id
+                                    ";
+
+            try
+            {
+                await using var connection = new SqlConnection(_connectionString);
+                var results = await connection.ExecuteAsync(query, new
+                {
+                    contact.Id,
+                    contact.PhoneNumber,
+                    contact.PhoneNumber2,
+                    contact.Email,
+                    contact.Email2,
+                    contact.ExtraDetails
+                });
+                return results;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
     }
 }

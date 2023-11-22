@@ -9,13 +9,13 @@ namespace DKMS_Clients_Back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        private readonly ILogger<CustomersController> _logger;
+        private readonly ILogger<CustomerController> _logger;
         private readonly IContactService _contactService;
 
-        public CustomersController(ICustomerService customerService,ILogger<CustomersController> logger,IContactService contactService)
+        public CustomerController(ICustomerService customerService,ILogger<CustomerController> logger,IContactService contactService)
         {
             _customerService = customerService;
             _logger = logger;
