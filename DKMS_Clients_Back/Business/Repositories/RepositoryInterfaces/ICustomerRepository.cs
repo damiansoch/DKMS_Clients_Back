@@ -5,5 +5,8 @@ namespace DKMS_Clients_Back.Business.Repositories.RepositoryInterfaces;
 public interface ICustomerRepository
 {
     Task<IEnumerable<Customer>> GetAllAsync();
-    Task<Customer?> GetById(Guid id);
+    Task<Customer?> GetByIdAsync(Guid id);
+    Task<Guid?> AddAsync(Customer customer); 
+    Task<int> DeleteAsync(Guid id);
+    Task<int> UpdateAsync(Customer customer);
 }

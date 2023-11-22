@@ -1,4 +1,5 @@
 ﻿using DKMS_Clients_Back.Business.Services.ServiceInterfaces;
+using DKMS_Clients_Back.Dtos;
 using DKMS_Clients_Back.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,14 +13,16 @@ namespace DKMS_Clients_Back.Controllers
     {
         private readonly ICustomerService _customerService;
         private readonly ILogger<CustomersController> _logger;
+        private readonly IContactService _contactService;
 
-        public CustomersController(ICustomerService customerService,ILogger<CustomersController> logger)
+        public CustomersController(ICustomerService customerService,ILogger<CustomersController> logger,IContactService contactService)
         {
             _customerService = customerService;
             _logger = logger;
+            _contactService = contactService;
         }
 
-        // GET: api/<CustomersController>
+       
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> Get()
         {
@@ -37,7 +40,7 @@ namespace DKMS_Clients_Back.Controllers
             }
         }
 
-        // GET api/<CustomersController>/5
+       
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Customer>> GetByIdAsync([FromRoute] Guid id)
         {
@@ -55,22 +58,63 @@ namespace DKMS_Clients_Back.Controllers
             }
         }
 
-        // POST api/<CustomersController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("create")]
+        public async Task<ActionResult> AddAsync([FromBody]AddCustomerRequestDto addRequestDto)
         {
+            try
+            {
+                var emailExist = await _contactService.DoesEmailExist(addRequestDto);
+                if (emailExist)
+                    return BadRequest("Email already exists in the database");
+
+                var result = await _customerService.AddCustomerAndContactAsync(addRequestDto);
+                if (result is null)
+                    return BadRequest("There was an error when adding customer");
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
 
-        // PUT api/<CustomersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpDelete("remove/{customerId:guid}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid customerId)
         {
+            try
+            {
+                var existingCustomer = await _customerService.GetByIdAsync(customerId);
+                if (existingCustomer is null)
+                    return NotFound("Customer not found in the database");
+                var result = await _customerService.DeleteAsync(customerId);
+                if (result < 1)
+                    return BadRequest("Something went wrong");
+                return Ok("Customer Deleted");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
 
-        // DELETE api/<CustomersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPut("update/{customerId:guid}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid customerId, [FromBody]UpdateCustomerRequestDto updateCustomerRequestDto)
         {
+            try
+            {
+                var result = await _customerService.UpdateAsync(customerId, updateCustomerRequestDto);
+                if (result is null)
+                    return NotFound("Customer not found in the database");
+                return result > 0 ? Ok("Customer data has been updated") : BadRequest("Something went wrong");
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
     }
 }

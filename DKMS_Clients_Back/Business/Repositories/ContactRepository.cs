@@ -5,7 +5,7 @@ using Dapper;
 
 namespace DKMS_Clients_Back.Business.Repositories
 {
-    public class ContactRepository:IContactRepository
+    public class ContactRepository : IContactRepository
     {
         private readonly ILogger<CustomerRepository> _logger;
         private readonly string _connectionString;
@@ -22,6 +22,36 @@ namespace DKMS_Clients_Back.Business.Repositories
             {
                 await using var connection = new SqlConnection(_connectionString);
                 var results = await connection.QueryAsync<Contact>(query);
+                return results;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
+
+        public async Task<int> AddAsync(Contact contact)
+        {
+            const string query = @"
+                                    INSERT INTO [dbo].[Contacts]
+                                    ([Id], [CustomerId], [PhoneNumber], [PhoneNumber2], [Email], [Email2], [ExtraDetails])
+                                    VALUES
+                                    (@Id, @CustomerId, @PhoneNumber, @PhoneNumber2, @Email, @Email2, @ExtraDetails)";
+
+            try
+            {
+                await using var connection = new SqlConnection(_connectionString);
+                var results = await connection.ExecuteAsync(query, new
+                {
+                    contact.Id,
+                    contact.CustomerId,
+                    contact.PhoneNumber,
+                    contact.PhoneNumber2,
+                    contact.Email,
+                    contact.Email2,
+                    contact.ExtraDetails
+                });
                 return results;
             }
             catch (Exception e)
