@@ -16,7 +16,7 @@ namespace DKMS_Clients_Back.Business.Repositories
         }
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            const string query = "SELECT * FROM Customers";
+            const string query = "SELECT * FROM Customers order by Created desc";
 
             try
             {

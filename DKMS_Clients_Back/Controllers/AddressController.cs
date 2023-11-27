@@ -46,7 +46,7 @@ namespace DKMS_Clients_Back.Controllers
                 if (result is null)
                     return NotFound("Customer not found in the database");
                 
-                if (result.Item1 < 0)
+                if (result.Item1 < 1)
                     return BadRequest("Something went wrong");
 
                 return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Item2.Id }, result.Item2);

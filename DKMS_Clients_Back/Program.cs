@@ -22,6 +22,16 @@ namespace DKMS_Clients_Back
             builder.Services.AddScoped<IJobService, JobService>();
 
             builder.Services.AddControllers();
+
+            // Enable CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,6 +46,8 @@ namespace DKMS_Clients_Back
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
