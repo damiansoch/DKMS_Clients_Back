@@ -14,6 +14,7 @@ namespace DKMS_Clients_Back.Models
         public string LastName { get; set; } = string.Empty;
         [MaxLength(100)]
         public string? CompanyName { get; set; }
+        public DateTime Created { get; set; }
 
         [NotMapped]
         public List<Contact>? Contacts { get; set; } = new List<Contact>();

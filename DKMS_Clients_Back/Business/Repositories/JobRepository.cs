@@ -16,7 +16,7 @@ namespace DKMS_Clients_Back.Business.Repositories
         }
         public async Task<IEnumerable<Job>> GetAllAsync()
         {
-            const string query = "SELECT * FROM Jobs";
+            const string query = "SELECT * FROM Jobs order by ToBeCompleted desc";
 
             try
             {
@@ -33,7 +33,7 @@ namespace DKMS_Clients_Back.Business.Repositories
 
         public async Task<Job?> GetAsync(Guid jobId)
         {
-            const string query = "SELECT * FROM Jobs WHERE Id = @Id";
+            const string query = "SELECT * FROM Jobs WHERE Id = @Id order by ToBeCompleted desc";
 
             try
             {

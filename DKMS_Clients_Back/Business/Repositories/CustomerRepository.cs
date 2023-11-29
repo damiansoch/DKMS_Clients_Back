@@ -54,17 +54,19 @@ namespace DKMS_Clients_Back.Business.Repositories
                                                ([Id]
                                                ,[FirstName]
                                                ,[LastName]
-                                               ,[CompanyName])
+                                               ,[CompanyName]
+                                                ,[Created])
                                          VALUES
                                                (@Id
                                                ,@FirstName
                                                ,@LastName
-                                               ,@CompanyName)
+                                               ,@CompanyName
+                                                ,@Created)
                                     ";
             try
             {
                 await using var connection = new SqlConnection(_connectionString);
-                var results = await connection.ExecuteAsync(query, new { customer.Id,customer.FirstName,customer.LastName,customer.CompanyName });
+                var results = await connection.ExecuteAsync(query, new { customer.Id,customer.FirstName,customer.LastName,customer.CompanyName,customer.Created });
                 if(results>0)
                     return customer.Id;
                 return null;

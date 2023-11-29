@@ -78,6 +78,7 @@ namespace DKMS_Clients_Back.Business.Services
                 Addresses = null,
                 Contacts = null,
                 Jobs = null,
+                Created = DateTime.Now
             };
             //creating Contact
             var newContact = new Contact()
