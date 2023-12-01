@@ -11,4 +11,5 @@ public interface IJobService
     Task<Tuple<int, Job>> CreateAsync(Guid customerId,AddJobRequestDto addJobRequestDto);
     Task<int?> DeleteAsync(Guid jobId);
     Task<int?> UpdateAsync(Guid jobId,UpdateJobRequestDto updateJobRequestDto);
+    Task<int?> UpdateJobCompleted(Guid jobId, bool isCompleted);
 }

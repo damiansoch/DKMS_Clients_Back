@@ -126,5 +126,25 @@ namespace DKMS_Clients_Back.Business.Repositories
                 throw;
             }
         }
+
+        public async Task<int> UpdateJobCompleted(Guid jobId, bool isCompleted)
+        {
+            const string query = @"
+                                   UPDATE [dbo].[Jobs]
+                                   SET [Completed] = @Completed
+                                 WHERE Id = @Id
+                                    ";
+            try
+            {
+                await using var connection = new SqlConnection(_connectionString);
+                var result = await connection.ExecuteAsync(query, new { Completed=isCompleted, Id = jobId});
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
     }
 }

@@ -69,5 +69,14 @@ namespace DKMS_Clients_Back.Business.Services
             var response = await _jobRepository.UpdateAsync(existingJob);
             return response;
         }
+
+        public async Task<int?> UpdateJobCompleted(Guid jobId, bool isCompleted)
+        {
+            var existingJob = await GetAsync(jobId);
+            if (existingJob is null) return null;
+
+            var response = await _jobRepository.UpdateJobCompleted(jobId, isCompleted);
+            return response;
+        }
     }
 }

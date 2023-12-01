@@ -106,5 +106,22 @@ namespace DKMS_Clients_Back.Controllers
                 throw;
             }
         }
+
+        [HttpPut("update/{jobId:guid}/{isCompleted:bool}")]
+        public async Task<IActionResult> UpdateJobCompleted([FromRoute] Guid jobId,
+            [FromRoute] bool isCompleted)
+        {
+            try
+            {
+                var response = await _jobService.UpdateJobCompleted(jobId, isCompleted);
+                return response is null ? NotFound("Job not found") :
+                    response < 1 ? BadRequest("Something went wrong") : Ok($"Job marked as " + (isCompleted? "completed":"not completed"));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+        }
     }
 }

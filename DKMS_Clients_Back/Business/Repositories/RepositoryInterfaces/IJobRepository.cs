@@ -9,4 +9,5 @@ public interface IJobRepository
     Task<int> CreateAsync(Job job);
     Task<int> DeleteAsync(Guid jobId);
     Task<int> UpdateAsync(Job job);
+    Task<int> UpdateJobCompleted(Guid jobId, bool isCompleted);
 }
